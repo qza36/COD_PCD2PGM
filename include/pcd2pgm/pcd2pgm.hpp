@@ -11,7 +11,10 @@ public:
     void publishPCD();
     void passThroughFilter(double thre_low, double thre_high, bool flag_in);
 private:
-    std::string pcd_path_{"/ros2_ws/src/COD_NAV_NEXT/map/map.pcd"};
+    float thre_low;
+    float thre_high;
+    bool is_negative;
+    std::string pcd_path_{};
     rclcpp::Node::SharedPtr node_{};
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr pcd_;
