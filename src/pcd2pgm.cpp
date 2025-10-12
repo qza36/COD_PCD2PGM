@@ -4,8 +4,11 @@
 #include "pcl/common/transforms.h"
 #include "pcl/filters/passthrough.h"
 #include "pcl/filters/radius_outlier_removal.h"
+#include <pcl/filters/conditional_removal.h>
 
-PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node")
+PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node"),  map_(grid_map::GridMap({"elevation"})),
+  gridMapPclLoader(this->get_logger()),
+  filterChain_("grid_map::GridMap")
 {
     declare_parameter("thre_low","");
     declare_parameter("thre_high","");
@@ -13,6 +16,7 @@ PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node")
     declare_parameter("radius","");
     declare_parameter("thre_count","");
     declare_parameter("pcd_path","/ros2_ws/src/COD_NAV_NEXT/map/map.pcd");
+    declare_parameter("config_path","");
 
     get_parameter("pcd_path",pcd_path_);
     get_parameter("thre_low",thre_low);
@@ -20,8 +24,11 @@ PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node")
     get_parameter("radius",radius);
     get_parameter("thre_count",thre_count);
     get_parameter("is_negative",is_negative);
+    get_parameter("config_patth",config_path_);
 
     pcd_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>);
+    gridMapPublisher_ = this->create_publisher<grid_map_msgs::msg::GridMap>(
+    "grid_map", rclcpp::QoS(1).transient_local());
     loadPCDFile(pcd_path_);
     passThroughFilter(thre_low,thre_high,is_negative);
     radiusOutlierFilter(cloud_after_pass_through_,radius,thre_count);
@@ -60,6 +67,24 @@ void PCD2PGM::radiusOutlierFilter(const pcl::PointCloud<pcl::PointXYZ>::Ptr& inp
     cloud_after_radius_ = filtered_cloud;
     RCLCPP_INFO(
       get_logger(), "After RadiusOutlier filtering: %lu points", cloud_after_radius_->points.size());
+}
+void PCD2PGM::PCD2GridMap()
+{
+    gridMapPclLoader.setInputCloud(cloud_after_radius_);
+    gridMapPclLoader.preProcessInputCloud();
+    gridMapPclLoader.initializeGridMapGeometryFromInputCloud();
+    gridMapPclLoader.addLayerFromInputCloud("elevation");
+    map_ = gridMapPclLoader.getGridMap();
+    map_.setFrameId(mapFrameId_);
+    grid_map::GridMap outputMap;
+    if (!filterChain_.update(map_, outputMap))
+    {
+        RCLCPP_ERROR(this->get_logger(), "Could not update the grid map filter chain!");
+        return;
+    }
+    auto message = grid_map::GridMapRosConverter::toMessage(outputMap);
+    message->header.stamp = this->now();
+    gridMapPublisher_->publish(std::move(message));
 }
 
 
