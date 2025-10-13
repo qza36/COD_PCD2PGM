@@ -32,6 +32,17 @@ PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node"),  ma
     loadPCDFile(pcd_path_);
     passThroughFilter(thre_low,thre_high,is_negative);
     radiusOutlierFilter(cloud_after_pass_through_,radius,thre_count);
+
+    if (filterChain_.configure(
+        filterChainParametersName_, this->get_node_logging_interface(),
+        this->get_node_parameters_interface()))
+    {
+        RCLCPP_INFO(this->get_logger(), "Filter chain configured.");
+    } else {
+        RCLCPP_ERROR(this->get_logger(), "Could not configure the filter chain!");
+        rclcpp::shutdown();
+        return;
+    }
 }
 void PCD2PGM::loadPCDFile(const std::string& filepath)
 {
