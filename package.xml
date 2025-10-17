@@ -13,6 +13,8 @@
   <depend>sensor_msgs</depend>
   <depend>rclcpp</depend>
   <depend>grid_map</depend>
+  <depend>grid_map_core</depend>
+  <depend>grid_map_ros</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
