@@ -33,7 +33,7 @@ install(TARGETS
         pcd2pgm
         DESTINATION lib/${PROJECT_NAME})
 install(
-        DIRECTORY config
+        DIRECTORY config launch
         DESTINATION share/${PROJECT_NAME}
 )
 
