@@ -10,13 +10,13 @@ PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node"),  ma
   gridMapPclLoader(this->get_logger()),
   filterChain_("grid_map::GridMap")
 {
-    declare_parameter("thre_low","");
-    declare_parameter("thre_high","");
-    declare_parameter("is_negative","false");
-    declare_parameter("radius","");
-    declare_parameter("thre_count","");
+    declare_parameter("thre_low",0.0);
+    declare_parameter("thre_high",1.5);
+    declare_parameter("is_negative",false);
+    declare_parameter("radius",5.0);
+    declare_parameter("thre_count",10.0);
     declare_parameter("pcd_path","/ros2_ws/src/COD_NAV_NEXT/map/map.pcd");
-    declare_parameter("config_path","");
+    declare_parameter("config_path","/ros2_ws/src/COD_NAV_NEXT/cnn_perception/pcd2pgm/config/config.yaml");
 
     get_parameter("pcd_path",pcd_path_);
     get_parameter("thre_low",thre_low);
@@ -29,6 +29,10 @@ PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node"),  ma
     pcd_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>);
     gridMapPublisher_ = this->create_publisher<grid_map_msgs::msg::GridMap>(
     "grid_map", rclcpp::QoS(1).transient_local());
+    Timer_ = rclcpp::create_timer(this,
+                                this->get_clock(),
+                                rclcpp::Duration::from_seconds(1),
+                                std::bind(&PCD2PGM::PCD2GridMap, this));
     loadPCDFile(pcd_path_);
     passThroughFilter(thre_low,thre_high,is_negative);
     radiusOutlierFilter(cloud_after_pass_through_,radius,thre_count);
@@ -81,6 +85,7 @@ void PCD2PGM::radiusOutlierFilter(const pcl::PointCloud<pcl::PointXYZ>::Ptr& inp
 }
 void PCD2PGM::PCD2GridMap()
 {
+    gridMapPclLoader.loadParameters(config_path_);
     gridMapPclLoader.setInputCloud(cloud_after_radius_);
     gridMapPclLoader.preProcessInputCloud();
     gridMapPclLoader.initializeGridMapGeometryFromInputCloud();

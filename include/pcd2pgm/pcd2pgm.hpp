@@ -37,6 +37,7 @@ private:
     std::string filterChainParametersName_{};
     rclcpp::Node::SharedPtr node_{};
     rclcpp::Publisher<grid_map_msgs::msg::GridMap>::SharedPtr gridMapPublisher_;
+    rclcpp::TimerBase::SharedPtr Timer_;
 
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr pcd_;
