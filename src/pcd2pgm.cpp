@@ -24,7 +24,7 @@ PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node"),  ma
     get_parameter("radius",radius);
     get_parameter("thre_count",thre_count);
     get_parameter("is_negative",is_negative);
-    get_parameter("config_patth",config_path_);
+    get_parameter("config_path",config_path_);
 
     pcd_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>);
     gridMapPublisher_ = this->create_publisher<grid_map_msgs::msg::GridMap>(
