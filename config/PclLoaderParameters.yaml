@@ -19,14 +19,14 @@ pcl_grid_map_extraction:
     mean_K: 8
     stddev_threshold: 0.1
   downsampling:
-    is_downsample_cloud: false
+    is_downsample_cloud: true
     voxel_size:
-      x: 0.03
-      y: 0.03
-      z: 0.03
+      x: 0.05
+      y: 0.05
+      z: 0.05
   grid_map:
     min_num_points_per_cell: 1
-    resolution: 0.1
+    resolution: 0.2
     # 0: Smallest value among the average values ​​of each cluster
     # 1: Mean value of the cluster with the most points
     height_type: 1
