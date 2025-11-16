@@ -27,6 +27,14 @@ PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node"),  ma
     get_parameter("is_negative",is_negative);
     get_parameter("config_path",config_path_);
 
+    //debug
+    std::cout << color_text::YELLOW << "pcd_path: " << pcd_path_ << color_text::RESET << std::endl;
+    std::cout << color_text::YELLOW << "thre_low: " << thre_low << color_text::RESET << std::endl;
+    std::cout << color_text::YELLOW << "thre_high: " << thre_high << color_text::RESET << std::endl;
+    std::cout << color_text::YELLOW << "radius: " << radius << color_text::RESET << std::endl;
+    std::cout << color_text::YELLOW << "thre_count: " << thre_count << color_text::RESET << std::endl;
+    std::cout << color_text::YELLOW << "is_negative: " << std::boolalpha << is_negative << color_text::RESET << std::endl;
+    std::cout << color_text::YELLOW << "pcd2gridmapConfig: " << pcd2gridmapConfig << color_text::RESET << std::endl;
     pcd_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>);
     gridMapPublisher_ = this->create_publisher<grid_map_msgs::msg::GridMap>(
     "grid_map", rclcpp::QoS(1).transient_local());
