@@ -1,6 +1,7 @@
 pcd_to_gridmap:
   ros__parameters:
-    pcd_file_path: "/ros2_ws/src/COD_NAV_NEXT/map/map.pcd"
+    pcd_path: "/home/cod-sentry/qza_ws/pcd2pgm/src/COD_PCD2PGM/map.pcd"
+    config_path: "/home/cod-sentry/qza_ws/pcd2pgm/src/COD_PCD2PGM/config/gridMap_params.yaml"
     map_frame_id: "map"
     filters:
       filter1:  # Fill holes in the map with inpainting.
