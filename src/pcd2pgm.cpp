@@ -15,8 +15,9 @@ PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node"),  ma
     declare_parameter("is_negative",false);
     declare_parameter("radius",5.0);
     declare_parameter("thre_count",10.0);
-    declare_parameter("pcd_path","/ros2_ws/src/COD_NAV_NEXT/map/map.pcd");
-    declare_parameter("config_path","/ros2_ws/src/COD_NAV_NEXT/cnn_perception/pcd2pgm/config/config.yaml");
+    declare_parameter("pcd_path","");
+    declare_parameter("pcd2gridmapConfig","");
+    declare_parameter("filter_chain_parameter_name",std::string("filters"));
 
     get_parameter("pcd_path",pcd_path_);
     get_parameter("thre_low",thre_low);
