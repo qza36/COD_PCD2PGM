@@ -1,4 +1,5 @@
 #include "pcd2pgm/pcd2pgm.hpp"
+#include "pcd2pgm/color_txt.hpp"
 #include "pcl_conversions/pcl_conversions.h"
 #include <pcl/io/pcd_io.h>
 #include "pcl/common/transforms.h"
@@ -25,7 +26,8 @@ PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node"),  ma
     get_parameter("radius",radius);
     get_parameter("thre_count",thre_count);
     get_parameter("is_negative",is_negative);
-    get_parameter("config_path",config_path_);
+    get_parameter("pcd2gridmapConfig",pcd2gridmapConfig);
+    get_parameter("filter_chain_parameter_name",filterChainParametersName_);
 
     //debug
     std::cout << color_text::YELLOW << "pcd_path: " << pcd_path_ << color_text::RESET << std::endl;
@@ -94,13 +96,13 @@ void PCD2PGM::radiusOutlierFilter(const pcl::PointCloud<pcl::PointXYZ>::Ptr& inp
 }
 void PCD2PGM::PCD2GridMap()
 {
-    gridMapPclLoader.loadParameters(config_path_);
+    gridMapPclLoader.loadParameters(pcd2gridmapConfig);
     gridMapPclLoader.setInputCloud(cloud_after_radius_);
     gridMapPclLoader.preProcessInputCloud();
     gridMapPclLoader.initializeGridMapGeometryFromInputCloud();
     gridMapPclLoader.addLayerFromInputCloud("elevation");
     map_ = gridMapPclLoader.getGridMap();
-    map_.setFrameId(mapFrameId_);
+    map_.setFrameId("map");
     grid_map::GridMap outputMap;
     if (!filterChain_.update(map_, outputMap))
     {
@@ -109,6 +111,7 @@ void PCD2PGM::PCD2GridMap()
     }
     auto message = grid_map::GridMapRosConverter::toMessage(outputMap);
     message->header.stamp = this->now();
+    message->header.frame_id = "map";
     gridMapPublisher_->publish(std::move(message));
 }
 
