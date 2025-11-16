@@ -1,7 +1,6 @@
 pcd_to_gridmap:
   ros__parameters:
     pcd_path: "/home/cod-sentry/qza_ws/pcd2pgm/src/COD_PCD2PGM/map.pcd"
-    pcd2gridmapConfig: "/home/cod-sentry/qza_ws/pcd2pgm/src/COD_PCD2PGM/config/PclLoaderParameters.yaml"
     map_frame_id: "map"
     thre_low: 0.1
     thre_high: 1.5
