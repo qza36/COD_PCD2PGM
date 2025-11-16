@@ -34,11 +34,7 @@ def generate_launch_description():
         package='pcd2pgm',
         executable='pcd2pgm',
         name='pcd_to_gridmap',
-        parameters=[param_file,
-                    {
-                        "config_file_path" : os.path.join(grid_map_demos_dir, 'config', 'config.yaml')
-                    }
-                    ],
+        parameters=[param_file],
         output="screen",
         respawn=True
     )
