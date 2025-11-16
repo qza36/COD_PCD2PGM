@@ -32,8 +32,7 @@ private:
     float thre_count;
     bool is_negative;
     std::string pcd_path_{};
-    std::string config_path_{};
-    std::string mapFrameId_{};
+    std::string pcd2gridmapConfig{};
     std::string filterChainParametersName_{};
     rclcpp::Node::SharedPtr node_{};
     rclcpp::Publisher<grid_map_msgs::msg::GridMap>::SharedPtr gridMapPublisher_;
