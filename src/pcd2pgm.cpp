@@ -11,25 +11,16 @@ PCD2PGM::PCD2PGM(const rclcpp::NodeOptions& options) : Node("pcd2pgm_node"),  ma
   gridMapPclLoader(this->get_logger()),
   filterChain_("grid_map::GridMap")
 {
-    declare_parameter("thre_low",0.0);
-    declare_parameter("thre_high",1.5);
-    declare_parameter("is_negative",false);
-    declare_parameter("radius",5.0);
-    declare_parameter("thre_count",10.0);
-    declare_parameter("pcd_path","");
-    declare_parameter("pcd2gridmapConfig","");
-    declare_parameter("filter_chain_parameter_name",std::string("filters"));
+    thre_low = this->declare_parameter<double>("thre_low", 0.0);
+    thre_high = this->declare_parameter<double>("thre_high", 1.5);
+    is_negative = this->declare_parameter<bool>("is_negative", false);
+    radius = this->declare_parameter<double>("radius", 5.0);
+    thre_count = this->declare_parameter<double>("thre_count", 10.0);
 
-    get_parameter("pcd_path",pcd_path_);
-    get_parameter("thre_low",thre_low);
-    get_parameter("thre_high",thre_high);
-    get_parameter("radius",radius);
-    get_parameter("thre_count",thre_count);
-    get_parameter("is_negative",is_negative);
-    get_parameter("pcd2gridmapConfig",pcd2gridmapConfig);
-    get_parameter("filter_chain_parameter_name",filterChainParametersName_);
+    pcd_path_ = this->declare_parameter<std::string>("pcd_path", "");
+    pcd2gridmapConfig = this->declare_parameter<std::string>("pcd2gridmapConfig", "");
+    filterChainParametersName_ = this->declare_parameter<std::string>("filter_chain_parameter_name", "filters");      //debug
 
-    //debug
     std::cout << color_text::YELLOW << "pcd_path: " << pcd_path_ << color_text::RESET << std::endl;
     std::cout << color_text::YELLOW << "thre_low: " << thre_low << color_text::RESET << std::endl;
     std::cout << color_text::YELLOW << "thre_high: " << thre_high << color_text::RESET << std::endl;
