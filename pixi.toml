@@ -1,0 +1,51 @@
+[workspace]
+name = "pcd2pgm"
+description = "Convert PCD point cloud to 2.5D elevation grid map"
+authors = ["ZhiangQi <an9qi@yandex.com>"]
+channels = ["https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/", "https://prefix.dev/conda-forge"]
+platforms = ["osx-arm64"]
+
+[target.unix.activation.env]
+RMW_IMPLEMENTATION = "rmw_cyclonedds_cpp"
+
+[feature.build.target.unix.tasks]
+build = "colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+verify = { cmd = "bash -c 'source install/setup.bash && ros2 pkg list 2>&1 | grep pcd2pgm && ros2 launch pcd2pgm pcd2pgm.launch.py --show-arguments'", depends-on = ["build"] }
+run = { cmd = "bash -c 'source install/setup.bash && ros2 launch pcd2pgm pcd2pgm.launch.py'", depends-on = ["build"] }
+
+[dependencies]
+compilers = "*"
+cmake = "*"
+pkg-config = "*"
+make = "*"
+ninja = "*"
+colcon-common-extensions = "*"
+eigen = ">=3.4.0,<4"
+pcl = ">=1.14,<2"
+
+[environments]
+default = { features = ["jazzy", "build"] }
+jazzy = { features = ["jazzy", "build"] }
+
+[feature.jazzy]
+channels = ["https://prefix.dev/robostack-jazzy", "https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/", "https://prefix.dev/conda-forge"]
+
+[feature.jazzy.dependencies]
+ros2-distro-mutex = { version = "0.14.*", build = "jazzy_*" }
+ros-jazzy-rclcpp = "*"
+ros-jazzy-ament-cmake = "*"
+ros-jazzy-sensor-msgs = "*"
+ros-jazzy-tf2-eigen = "*"
+ros-jazzy-pcl-ros = "*"
+ros-jazzy-rmw-cyclonedds-cpp = "*"
+ros-jazzy-grid-map-core = "*"
+ros-jazzy-grid-map-ros = "*"
+ros-jazzy-grid-map-pcl = "*"
+ros-jazzy-grid-map-filters = "*"
+ros-jazzy-grid-map-msgs = "*"
+ros-jazzy-grid-map-visualization = "*"
+ros-jazzy-ament-lint-auto = "*"
+ros-jazzy-ros2cli = "*"
+ros-jazzy-ros2launch = "*"
+ros-jazzy-ros2run = "*"
+ros-jazzy-rviz2 = "*"
