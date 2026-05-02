@@ -1,0 +1,11 @@
+# Pixi
+.pixi/
+
+# Build
+build/
+install/
+log/
+
+# IDE
+.idea/
+cmake-build-*/
