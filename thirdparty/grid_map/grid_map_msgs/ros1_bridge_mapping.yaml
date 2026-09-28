@@ -1,0 +1,13 @@
+-
+  ros1_package_name: 'grid_map_msgs'
+  ros1_message_name: 'GridMap'
+  ros2_package_name: 'grid_map_msgs'
+  ros2_message_name: 'GridMap'
+  fields_2_to_1:
+    header: "info.header"
+    info: "info"
+    layers: "layers"
+    basic_layers: "basic_layers"
+    data: "data"
+    outer_start_index: "outer_start_index"
+    inner_start_index: "inner_start_index"
